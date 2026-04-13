@@ -37,20 +37,24 @@ export const TimelineLineChart = forwardRef(({ documents }, ref) => {
   }, [documents]);
 
   return (
-    <div ref={ref} className="w-full h-[400px] min-w-[600px] p-4 bg-white">
+    <div ref={ref} className="w-full h-[500px] min-w-[600px] p-4 bg-white">
       <h3 className="text-lg font-bold mb-6 text-gray-800">Keyword Frequency Over Time</h3>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data}
-          margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+          margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
         >
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
           <XAxis 
             dataKey="year" 
             stroke="#6B7280"
             fontSize={12}
+            angle={-45}
+            textAnchor="end"
+            height={60}
+            tick={{ dy: 10 }}
           />
-          <YAxis stroke="#6B7280" />
+          <YAxis stroke="#6B7280" fontSize={11} tick={{ dx: -5 }} />
           <Tooltip 
             contentStyle={{ 
               borderRadius: '12px', 

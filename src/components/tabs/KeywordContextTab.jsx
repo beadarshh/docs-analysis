@@ -35,7 +35,7 @@ export const KeywordContextTab = () => {
   const highlightKeyword = (text, keyword) => {
     const regex = new RegExp(`(${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
     const parts = text.split(regex);
-    return parts.map((part, i) => 
+    return parts.map((part, i) =>
       regex.test(part) ? <span key={i} className="bg-highlight font-bold px-1 rounded">{part}</span> : part
     );
   };
@@ -55,11 +55,10 @@ export const KeywordContextTab = () => {
                 <button
                   key={kw}
                   onClick={() => setSelectedKeyword(kw)}
-                  className={`text-left px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
-                    selectedKeyword === kw 
-                      ? 'bg-accent text-white shadow-md' 
+                  className={`text-left px-4 py-3 rounded-xl text-sm font-semibold transition-all ${selectedKeyword === kw
+                      ? 'bg-accent text-white shadow-md'
                       : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-                  }`}
+                    }`}
                 >
                   {kw}
                 </button>
@@ -74,8 +73,8 @@ export const KeywordContextTab = () => {
             <div className="flex flex-wrap items-center gap-4">
               <div className="flex items-center gap-2">
                 <Filter size={14} className="text-gray-400" />
-                <select 
-                  value={filterType} 
+                <select
+                  value={filterType}
                   onChange={(e) => setFilterType(e.target.value)}
                   className="bg-white border border-gray-200 rounded-lg px-3 py-1 text-xs font-bold focus:outline-none"
                 >
@@ -86,8 +85,8 @@ export const KeywordContextTab = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Calendar size={14} className="text-gray-400" />
-                <select 
-                  value={filterYear} 
+                <select
+                  value={filterYear}
                   onChange={(e) => setFilterYear(e.target.value)}
                   className="bg-white border border-gray-200 rounded-lg px-3 py-1 text-xs font-bold focus:outline-none"
                 >
@@ -103,18 +102,17 @@ export const KeywordContextTab = () => {
 
           <div className="space-y-4 max-h-[800px] overflow-y-auto pr-2 scrollbar-hide">
             {results.length > 0 ? results.map((item, idx) => (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: idx * 0.05 }}
-                key={idx} 
+                key={idx}
                 className="glass-card p-6 space-y-4 hover:shadow-2xl hover:scale-[1.01] transition-all"
               >
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest ${
-                      item.type === "UN Speech" ? 'bg-un/10 text-un' : 'bg-g20/10 text-g20'
-                    }`}>
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest ${item.type === "UN Speech" ? 'bg-un/10 text-un' : 'bg-g20/10 text-g20'
+                      }`}>
                       {item.type}
                     </span>
                     <span className="text-[10px] font-bold text-gray-400 border border-gray-100 px-2 py-0.5 rounded italic">
@@ -126,7 +124,7 @@ export const KeywordContextTab = () => {
                     {item.docName}
                   </div>
                 </div>
-                
+
                 <div className="flex gap-4">
                   <Quote size={24} className="text-accent/20 flex-shrink-0" />
                   <p className="text-gray-700 leading-relaxed text-sm">

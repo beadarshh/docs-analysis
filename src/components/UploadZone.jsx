@@ -8,13 +8,13 @@ import { FilePill } from './FilePill';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const UploadZone = () => {
-  const { 
-    files, setFiles, 
-    setDocuments, 
-    isProcessing, setIsProcessing, 
-    processingStatus, setProcessingStatus 
+  const {
+    files, setFiles,
+    setDocuments,
+    isProcessing, setIsProcessing,
+    processingStatus, setProcessingStatus
   } = useAppContext();
-  
+
   const [isDragging, setIsDragging] = useState(false);
 
   const handleFiles = (incomingFiles) => {
@@ -39,14 +39,14 @@ export const UploadZone = () => {
 
   const handleAnalyze = async () => {
     if (files.length === 0) return;
-    
+
     setIsProcessing(true);
     const results = [];
-    
+
     for (let i = 0; i < files.length; i++) {
       const fileData = files[i];
-      setProcessingStatus({ 
-        filename: fileData.file.name, 
+      setProcessingStatus({
+        filename: fileData.file.name,
         progress: 0,
         current: i + 1,
         total: files.length
@@ -56,18 +56,18 @@ export const UploadZone = () => {
         const text = await extractTextFromPDF(fileData.file, (progress) => {
           setProcessingStatus(prev => ({ ...prev, progress }));
         });
-        
+
         const analysis = analyzeDocument(text, fileData.file.name, {
           year: fileData.year,
           type: fileData.type
         });
-        
+
         results.push(analysis);
       } catch (error) {
         console.error(`Error processing ${fileData.file.name}:`, error);
       }
     }
-    
+
     setDocuments(results);
     setIsProcessing(false);
   };
@@ -75,7 +75,7 @@ export const UploadZone = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 space-y-8">
       {/* Header section with branding */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className="text-center space-y-4 max-w-2xl"
@@ -95,33 +95,31 @@ export const UploadZone = () => {
       {/* Main Upload Area */}
       <div className="w-full max-w-4xl space-y-8">
         {!isProcessing ? (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="space-y-6"
           >
-            <div 
+            <div
               onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
               onDragLeave={() => setIsDragging(false)}
               onDrop={onDrop}
               onClick={() => document.getElementById('file-input').click()}
-              className={`relative border-2 border-dashed rounded-3xl p-12 text-center transition-all cursor-pointer group ${
-                isDragging ? 'border-accent bg-accent/5 scale-[1.01]' : 'border-gray-200 bg-white hover:border-accent/40 hover:bg-gray-50'
-              }`}
+              className={`relative border-2 border-dashed rounded-3xl p-12 text-center transition-all cursor-pointer group ${isDragging ? 'border-accent bg-accent/5 scale-[1.01]' : 'border-gray-200 bg-white hover:border-accent/40 hover:bg-gray-50'
+                }`}
             >
-              <input 
+              <input
                 id="file-input"
-                type="file" 
-                multiple 
-                accept=".pdf" 
-                className="hidden" 
+                type="file"
+                multiple
+                accept=".pdf"
+                className="hidden"
                 onChange={(e) => handleFiles(e.target.files)}
               />
-              
+
               <div className="flex flex-col items-center gap-4">
-                <div className={`p-6 rounded-2xl transition-all ${
-                  isDragging ? 'bg-accent text-white scale-110' : 'bg-accent/10 text-accent group-hover:scale-110'
-                }`}>
+                <div className={`p-6 rounded-2xl transition-all ${isDragging ? 'bg-accent text-white scale-110' : 'bg-accent/10 text-accent group-hover:scale-110'
+                  }`}>
                   <FilePlus size={40} />
                 </div>
                 <div>
@@ -132,21 +130,21 @@ export const UploadZone = () => {
             </div>
 
             {files.length > 0 && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="space-y-4"
               >
                 <div className="flex items-center justify-between">
                   <h4 className="text-sm font-bold text-gray-900 uppercase tracking-widest">{files.length} Files Ready</h4>
-                  <button 
+                  <button
                     onClick={() => setFiles([])}
                     className="text-xs font-semibold text-gray-500 hover:text-red-500 transition-colors"
                   >
                     Clear All
                   </button>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[400px] overflow-y-auto scrollbar-hide pr-2">
                   {files.map(file => (
                     <FilePill key={file.id} file={file} />
@@ -154,7 +152,7 @@ export const UploadZone = () => {
                 </div>
 
                 <div className="flex justify-center pt-4">
-                  <button 
+                  <button
                     onClick={handleAnalyze}
                     disabled={files.some(f => !f.year || f.type === "Other")}
                     className="btn-primary flex items-center gap-3 w-full md:w-auto justify-center"
@@ -180,7 +178,7 @@ export const UploadZone = () => {
                 <p className="text-gray-500">Analyzing document {processingStatus.current} of {processingStatus.total}</p>
               </div>
               <div className="w-full max-w-md bg-gray-100 h-2.5 rounded-full overflow-hidden">
-                <motion.div 
+                <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${processingStatus.progress}%` }}
                   className="bg-accent h-full shadow-[0_0_10px_rgba(99,102,241,0.5)]"

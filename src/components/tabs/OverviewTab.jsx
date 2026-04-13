@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { 
-  Files, 
-  Hash, 
-  TrendingUp, 
-  Target, 
+import {
+  Files,
+  Hash,
+  TrendingUp,
+  Target,
   Filter,
   ArrowUpDown
 } from 'lucide-react';
@@ -32,7 +32,7 @@ export const OverviewTab = () => {
     const years = documents.map(d => d.year).filter(y => y);
     const minYear = Math.min(...years);
     const maxYear = Math.max(...years);
-    
+
     const mostFreqKw = Object.entries(kwTotals).sort((a, b) => b[1] - a[1])[0];
 
     return {
@@ -48,18 +48,18 @@ export const OverviewTab = () => {
     if (filterType !== 'All') {
       docs = docs.filter(d => d.type === filterType);
     }
-    
+
     docs.sort((a, b) => {
       let valA = a[sortKey];
       let valB = b[sortKey];
       if (typeof valA === 'string') valA = valA.toLowerCase();
       if (typeof valB === 'string') valB = valB.toLowerCase();
-      
+
       if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
       if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
       return 0;
     });
-    
+
     return docs;
   }, [documents, filterType, sortKey, sortOrder]);
 
@@ -76,29 +76,29 @@ export const OverviewTab = () => {
     <div className="space-y-8 animate-slide-up">
       {/* Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard 
-          icon={<Files className="text-blue-500" />} 
-          label="Total Documents" 
-          value={stats.totalDocs} 
-          sub="Analyzed PDFs" 
+        <StatCard
+          icon={<Files className="text-blue-500" />}
+          label="Total Documents"
+          value={stats.totalDocs}
+          sub="Analyzed PDFs"
         />
-        <StatCard 
-          icon={<Hash className="text-green-500" />} 
-          label="Year Range" 
-          value={stats.yearRange} 
-          sub="Temporal Scope" 
+        <StatCard
+          icon={<Hash className="text-green-500" />}
+          label="Year Range"
+          value={stats.yearRange}
+          sub="Temporal Scope"
         />
-        <StatCard 
-          icon={<TrendingUp className="text-purple-500" />} 
-          label="Total Mentions" 
-          value={stats.totalMentions} 
-          sub="Across all keywords" 
+        <StatCard
+          icon={<TrendingUp className="text-purple-500" />}
+          label="Total Mentions"
+          value={stats.totalMentions}
+          sub="Across all keywords"
         />
-        <StatCard 
-          icon={<Target className="text-red-500" />} 
-          label="Top Keyword" 
-          value={stats.topKeyword} 
-          sub="Most frequent topic" 
+        <StatCard
+          icon={<Target className="text-red-500" />}
+          label="Top Keyword"
+          value={stats.topKeyword}
+          sub="Most frequent topic"
         />
       </div>
 
@@ -106,11 +106,11 @@ export const OverviewTab = () => {
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <h3 className="text-xl font-bold text-gray-900">Document Summary</h3>
-          
+
           <div className="flex items-center gap-2">
             <Filter size={16} className="text-gray-400" />
-            <select 
-              value={filterType} 
+            <select
+              value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
               className="bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-accent/20"
             >
@@ -149,9 +149,8 @@ export const OverviewTab = () => {
                         </p>
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${
-                          doc.type === "UN Speech" ? 'bg-un/10 text-un' : 'bg-g20/10 text-g20'
-                        }`}>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${doc.type === "UN Speech" ? 'bg-un/10 text-un' : 'bg-g20/10 text-g20'
+                          }`}>
                           {doc.type}
                         </span>
                       </td>
@@ -191,7 +190,7 @@ const StatCard = ({ icon, label, value, sub }) => (
 );
 
 const Th = ({ label, sortKey, current, onClick }) => (
-  <th 
+  <th
     className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest cursor-pointer hover:text-accent transition-colors"
     onClick={() => onClick(sortKey)}
   >

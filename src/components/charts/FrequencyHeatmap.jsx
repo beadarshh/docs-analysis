@@ -51,12 +51,12 @@ export const FrequencyHeatmap = forwardRef(({ documents }, ref) => {
         <div 
           className="grid gap-1"
           style={{ 
-            gridTemplateColumns: `minmax(200px, 1fr) repeat(${years.length}, 40px)`,
-            minWidth: `${200 + years.length * 40}px`
+            gridTemplateColumns: `minmax(250px, 1fr) repeat(${years.length}, 50px)`,
+            minWidth: `${250 + years.length * 50}px`
           }}
         >
           {/* Header Row */}
-          <div className="h-10 bg-gray-50 flex items-center px-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest border border-gray-100 rounded-tl-lg">
+          <div className="h-10 bg-gray-50 flex items-center px-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest border border-gray-100 rounded-tl-lg">
             Keyword
           </div>
           {years.map(year => (
@@ -68,7 +68,7 @@ export const FrequencyHeatmap = forwardRef(({ documents }, ref) => {
           {/* Data Rows */}
           {KEYWORDS.map(kw => (
             <React.Fragment key={kw}>
-              <div className="h-10 px-3 flex items-center text-xs font-semibold text-gray-700 bg-white border border-gray-100">
+              <div className="h-10 px-4 flex items-center text-[11px] font-semibold text-gray-700 bg-white border border-gray-100 truncate" title={kw}>
                 {kw}
               </div>
               {years.map(year => {

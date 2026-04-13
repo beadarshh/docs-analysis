@@ -36,12 +36,12 @@ export const KeywordBarChart = forwardRef(({ documents, selectedYear }, ref) => 
   }, [documents, selectedYear]);
 
   return (
-    <div ref={ref} className="w-full h-[400px] min-w-[600px] p-4 bg-white">
+    <div ref={ref} className="w-full h-[600px] min-w-[600px] p-4 bg-white">
       <h3 className="text-lg font-bold mb-6 text-gray-800">Keyword Frequency by Document Type</h3>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
-          margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+          margin={{ top: 20, right: 30, left: 40, bottom: 120 }}
         >
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
           <XAxis 
@@ -51,8 +51,10 @@ export const KeywordBarChart = forwardRef(({ documents, selectedYear }, ref) => 
             interval={0} 
             fontSize={10}
             stroke="#6B7280"
+            height={100}
+            tick={{ dy: 10 }}
           />
-          <YAxis stroke="#6B7280" />
+          <YAxis stroke="#6B7280" fontSize={11} tick={{ dx: -5 }} />
           <Tooltip 
             cursor={{ fill: '#F3F4F6' }}
             contentStyle={{ 
