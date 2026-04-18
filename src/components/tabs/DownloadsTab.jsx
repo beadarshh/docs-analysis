@@ -3,39 +3,53 @@ import {
   FileSpreadsheet, 
   FileJson, 
   Archive, 
-  FileImage
+  FileImage,
+  FileText,
+  FileCode
 } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
 import { exportDocumentSummary, exportKeywordContext } from '../../utils/csvExporter';
 import { bundleAsZip } from '../../utils/zipExporter';
+import { generateFullPdfReport } from '../../utils/pdfExporter';
 
 export const DownloadsTab = () => {
   const { documents } = useAppContext();
 
   const downloadCategories = [
     {
-      title: "Data Reports (CSV)",
+      title: "Executive Reports",
       items: [
         {
-          label: "Document Summary",
-          description: "Matrix of documents, word counts, and keyword frequencies.",
+          label: "Full Analysis Report (PDF)",
+          description: "A comprehensive document containing the project summary, document inventory, and thematic analysis.",
+          icon: <FileText className="text-red-600" />,
+          action: () => generateFullPdfReport(documents)
+        }
+      ]
+    },
+    {
+      title: "Data Collections (CSV)",
+      items: [
+        {
+          label: "Document Frequency Matrix",
+          description: "Detailed matrix of every keyword frequency mapped across your document collection.",
           icon: <FileSpreadsheet className="text-green-600" />,
           action: () => exportDocumentSummary(documents)
         },
         {
-          label: "Keyword in Context",
-          description: "List of every sentence containing a keyword found in the documents.",
-          icon: <FileJson className="text-blue-600" />,
+          label: "Keyword Context Ledger",
+          description: "Full export of every sentence where keywords appear, includes document metadata.",
+          icon: <FileCode className="text-blue-600" />,
           action: () => exportKeywordContext(documents)
         }
       ]
     },
     {
-      title: "Document Exports",
+      title: "Raw Data Archives",
       items: [
         {
-          label: "TXT Archive (ZIP)",
-          description: "All extracted plain text files bundled into a single ZIP archive.",
+          label: "Clean Text Bundle (ZIP)",
+          description: "All extracted plain text files from your uploads, formatted for secondary analysis.",
           icon: <Archive className="text-orange-600" />,
           action: () => bundleAsZip(documents)
         }
@@ -44,11 +58,11 @@ export const DownloadsTab = () => {
   ];
 
   return (
-    <div className="space-y-8 animate-slide-up">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="space-y-8 animate-slide-up pb-20">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {downloadCategories.map((category, idx) => (
-          <div key={idx} className="space-y-4">
-            <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest px-1">
+          <div key={idx} className="space-y-6">
+            <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest px-2 border-l-2 border-gray-100">
               {category.title}
             </h3>
             <div className="space-y-4">
@@ -56,16 +70,16 @@ export const DownloadsTab = () => {
                 <button
                   key={iidx}
                   onClick={item.action}
-                  className="w-full glass-card p-6 flex items-start gap-4 text-left group hover:scale-[1.02] active:scale-[0.98] transition-all hover:shadow-2xl hover:border-accent/20"
+                  className="w-full glass-card p-6 flex flex-col items-start gap-4 text-left group hover:shadow-2xl hover:border-accent/30 transition-all hover:-translate-y-1"
                 >
-                  <div className="p-4 bg-gray-50 rounded-2xl group-hover:bg-white transition-colors">
+                  <div className="p-4 bg-gray-50 rounded-2xl group-hover:bg-white transition-colors shadow-sm">
                     {item.icon}
                   </div>
-                  <div className="space-y-1">
-                    <h4 className="font-bold text-gray-900 group-hover:text-accent transition-colors">
+                  <div className="space-y-2">
+                    <h4 className="font-black text-gray-900 group-hover:text-accent transition-colors uppercase tracking-tight text-sm">
                       {item.label}
                     </h4>
-                    <p className="text-sm text-gray-500 leading-relaxed">
+                    <p className="text-xs text-gray-500 leading-relaxed font-medium">
                       {item.description}
                     </p>
                   </div>
@@ -76,16 +90,17 @@ export const DownloadsTab = () => {
         ))}
       </div>
 
-      <div className="glass-card p-8 bg-gradient-to-br from-indigo-50/50 to-white flex flex-col md:flex-row items-center gap-8 justify-between border-dashed border-2 border-indigo-100">
-        <div className="space-y-2 text-center md:text-left">
-          <h3 className="text-xl font-black text-indigo-900">Visual Assets Export</h3>
-          <p className="text-gray-600 text-sm max-w-lg">
-            To export charts and word clouds as PNG images, please use the specific download buttons located directly within the <span className="font-bold text-indigo-700">Charts & Heatmap</span> and <span className="font-bold text-indigo-700">Word Clouds</span> tabs.
+      <div className="glass-card p-10 bg-gradient-to-br from-gray-900 to-slate-800 flex flex-col md:flex-row items-center gap-8 justify-between border-none overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 rounded-full -mr-32 -mt-32 blur-3xl" />
+        <div className="space-y-3 text-center md:text-left relative">
+          <h3 className="text-2xl font-black text-white tracking-tighter uppercase">Visual Assets Export</h3>
+          <p className="text-gray-400 text-sm max-w-xl font-medium">
+            High-resolution charts and word clouds can be exported individually within their respective tabs to ensure layout integrity and specific keyword focus.
           </p>
         </div>
-        <div className="flex -space-x-4">
-          {[1,2,3].map(i => (
-            <div key={i} className="w-12 h-12 bg-white rounded-full border-4 border-indigo-50 flex items-center justify-center text-indigo-300 shadow-sm">
+        <div className="flex -space-x-4 relative">
+          {[1,2,3,4].map(i => (
+            <div key={i} className="w-14 h-14 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 flex items-center justify-center text-accent shadow-xl transform hover:rotate-12 transition-transform cursor-default">
               <FileImage size={24} />
             </div>
           ))}

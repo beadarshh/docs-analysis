@@ -1,12 +1,12 @@
 import React, { forwardRef, useMemo } from 'react';
-import { KEYWORDS } from '../../utils/keywordAnalyzer';
+import { ALL_KEYWORDS } from '../../utils/keywordGroups';
 
 export const FrequencyHeatmap = forwardRef(({ documents }, ref) => {
   const years = useMemo(() => [...new Set(documents.map(d => d.year))].sort(), [documents]);
 
   const heatmapData = useMemo(() => {
     const data = {};
-    KEYWORDS.forEach(kw => {
+    ALL_KEYWORDS.forEach(kw => {
       data[kw] = {};
       years.forEach(year => {
         data[kw][year] = documents
@@ -66,7 +66,7 @@ export const FrequencyHeatmap = forwardRef(({ documents }, ref) => {
           ))}
 
           {/* Data Rows */}
-          {KEYWORDS.map(kw => (
+          {ALL_KEYWORDS.map(kw => (
             <React.Fragment key={kw}>
               <div className="h-10 px-4 flex items-center text-[11px] font-semibold text-gray-700 bg-white border border-gray-100 truncate" title={kw}>
                 {kw}

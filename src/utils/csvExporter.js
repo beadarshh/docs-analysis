@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import { KEYWORDS } from './keywordAnalyzer';
+import { ALL_KEYWORDS } from './keywordGroups';
 
 /**
  * Generates CSV 1: Document Summary
@@ -13,7 +13,7 @@ export const exportDocumentSummary = (documents) => {
       "Word Count": doc.wordCount
     };
     
-    KEYWORDS.forEach(kw => {
+    ALL_KEYWORDS.forEach(kw => {
       row[kw] = doc.keywordFrequencies[kw] || 0;
     });
     
@@ -31,7 +31,7 @@ export const exportKeywordContext = (documents) => {
   const data = [];
   
   documents.forEach(doc => {
-    KEYWORDS.forEach(kw => {
+    ALL_KEYWORDS.forEach(kw => {
       const sentences = doc.keywordSentences[kw] || [];
       sentences.forEach(sentence => {
         data.push({

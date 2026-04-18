@@ -7,78 +7,106 @@ import {
   CartesianGrid, 
   Tooltip, 
   Legend, 
-  ResponsiveContainer,
-  Dot
+  ResponsiveContainer
 } from 'recharts';
 
-export const TimelineLineChart = forwardRef(({ documents }, ref) => {
+export const TimelineLineChart = forwardRef(({ documents, selectedKeywords = [], yAxisInterval = 100 }, ref) => {
   const data = useMemo(() => {
     const years = [...new Set(documents.map(d => d.year))].sort();
     
     return years.map(year => {
-      const unCount = documents
-        .filter(d => d.year === year && d.type === "UN Speech")
-        .reduce((sum, d) => {
-          return sum + Object.values(d.keywordFrequencies).reduce((a, b) => a + b, 0);
-        }, 0);
-      
-      const g20Count = documents
-        .filter(d => d.year === year && d.type === "G20 Declaration")
-        .reduce((sum, d) => {
-          return sum + Object.values(d.keywordFrequencies).reduce((a, b) => a + b, 0);
-        }, 0);
+      const getAggregatedCount = (type) => {
+        return documents
+          .filter(d => d.year === year && d.type === type)
+          .reduce((sum, d) => {
+            const freqs = d.keywordFrequencies;
+            if (selectedKeywords.length > 0) {
+              return sum + selectedKeywords.reduce((a, kw) => a + (freqs[kw] || 0), 0);
+            }
+            return sum + Object.values(freqs).reduce((a, b) => a + b, 0);
+          }, 0);
+      };
 
       return {
         year,
-        "UN Speeches": unCount,
-        "G20 Declarations": g20Count
+        "UN Speeches": getAggregatedCount("UN Speech"),
+        "G20 Declarations": getAggregatedCount("G20 Declaration")
       };
     });
-  }, [documents]);
+  }, [documents, selectedKeywords]);
+
+  // Calculate ticks based on interval
+  const yAxisTicks = useMemo(() => {
+    const maxVal = Math.max(...data.flatMap(d => [d["UN Speeches"], d["G20 Declarations"]]), 10);
+    const interval = parseInt(yAxisInterval) || 100;
+    const ticks = [];
+    for (let i = 0; i <= maxVal + interval; i += interval) {
+      ticks.push(i);
+    }
+    return ticks;
+  }, [data, yAxisInterval]);
 
   return (
-    <div ref={ref} className="w-full h-[500px] min-w-[600px] p-4 bg-white">
-      <h3 className="text-lg font-bold mb-6 text-gray-800">Keyword Frequency Over Time</h3>
-      <ResponsiveContainer width="100%" height="100%">
+    <div ref={ref} className="w-full h-[500px] min-w-[600px] p-8 bg-white rounded-2xl shadow-sm border border-gray-100">
+      <div className="mb-6">
+        <h3 className="text-xl font-black text-gray-900 tracking-tight">Keyword Trajectory Analysis</h3>
+        <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-1">Temporal Trends across Forums</p>
+      </div>
+
+      <ResponsiveContainer width="100%" height="90%">
         <LineChart
           data={data}
-          margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+          margin={{ top: 20, right: 30, left: 10, bottom: 60 }}
         >
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
           <XAxis 
             dataKey="year" 
-            stroke="#6B7280"
+            stroke="#9CA3AF"
             fontSize={12}
+            fontWeight={600}
             angle={-45}
             textAnchor="end"
             height={60}
             tick={{ dy: 10 }}
           />
-          <YAxis stroke="#6B7280" fontSize={11} tick={{ dx: -5 }} />
+          <YAxis 
+            stroke="#9CA3AF" 
+            fontSize={11} 
+            fontWeight={600} 
+            tick={{ dx: -5 }} 
+            ticks={yAxisTicks}
+            domain={[0, 'auto']}
+          />
           <Tooltip 
             contentStyle={{ 
-              borderRadius: '12px', 
+              borderRadius: '16px', 
               border: 'none', 
-              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-              fontSize: '12px'
+              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+              fontSize: '12px',
+              padding: '12px'
             }}
           />
-          <Legend />
+          <Legend 
+            verticalAlign="top" 
+            align="right" 
+            wrapperStyle={{ paddingBottom: '30px' }}
+            iconType="circle"
+          />
           <Line 
             type="monotone" 
             dataKey="UN Speeches" 
-            stroke="#3B82F6" 
-            strokeWidth={3}
-            dot={{ r: 6, fill: '#3B82F6', strokeWidth: 2, stroke: '#FFFFFF' }}
-            activeDot={{ r: 8 }}
+            stroke="#818CF8" 
+            strokeWidth={4} 
+            dot={{ r: 4, fill: '#818CF8', strokeWidth: 0 }}
+            activeDot={{ r: 8, strokeWidth: 0 }}
           />
           <Line 
             type="monotone" 
             dataKey="G20 Declarations" 
-            stroke="#22C55E" 
-            strokeWidth={3}
-            dot={{ r: 6, fill: '#22C55E', strokeWidth: 2, stroke: '#FFFFFF' }}
-            activeDot={{ r: 8 }}
+            stroke="#34D399" 
+            strokeWidth={4}
+            dot={{ r: 4, fill: '#34D399', strokeWidth: 0 }}
+            activeDot={{ r: 8, strokeWidth: 0 }}
           />
         </LineChart>
       </ResponsiveContainer>

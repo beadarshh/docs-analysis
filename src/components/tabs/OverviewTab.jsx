@@ -8,7 +8,7 @@ import {
   ArrowUpDown
 } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
-import { KEYWORDS } from '../../utils/keywordAnalyzer';
+import { ALL_KEYWORDS } from '../../utils/keywordGroups';
 
 export const OverviewTab = () => {
   const { documents } = useAppContext();
@@ -19,10 +19,10 @@ export const OverviewTab = () => {
   const stats = useMemo(() => {
     let totalMentions = 0;
     const kwTotals = {};
-    KEYWORDS.forEach(kw => kwTotals[kw] = 0);
+    ALL_KEYWORDS.forEach(kw => kwTotals[kw] = 0);
 
     documents.forEach(doc => {
-      KEYWORDS.forEach(kw => {
+      ALL_KEYWORDS.forEach(kw => {
         const count = doc.keywordFrequencies[kw] || 0;
         totalMentions += count;
         kwTotals[kw] += count;
